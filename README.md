@@ -26,6 +26,8 @@ SchXslt Redux XSLT1 is a *strict* implementation of ISO Schematron. If you switc
 as [SchXslt](https://github.com/schxslt/schxslt) or the ["Skeleton"](https://github.com/schematron/schematron) your
 schema files might not work as expected.
 
+Feel free to contact me if you need help getting your Schematron standard-compliant.
+
 ## Limitations
 
 SchXslt Redux XSLT1 comes with the following limitations.
