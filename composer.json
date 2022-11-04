@@ -1,0 +1,23 @@
+{
+    "name": "schxslt/redux-xslt1",
+    "description": "An implementation of an XSLT 1.0 ISO Schematron processor for the XSLT 1.0 query language binding",
+    "keywords": [ "schematron", "xml", "validation" ],
+    "homepage": "https://github.com/schxslt/schxslt-redux-xslt1",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Maus",
+            "email": "dmaus@dmaus.name",
+            "homepage": "https://dmaus.name"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/schxslt/schxslt-redux-xslt1",
+        "issues": "https://github.com/schxslt/schxslt-redux-xslt1/issues"
+    },
+    "autoload": {
+        "psr-4": {
+            "SchXslt\\Xslt1\\": "src/main/php"
+        }
+    }
+}
