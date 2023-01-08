@@ -44,15 +44,15 @@ SOFTWARE.
         <xsl:value-of select="concat('@Q{', namespace-uri($context), '}', local-name($context))"/>
       </xsl:when>
       <xsl:when test="$context/self::text()">
-        <xsl:value-of select="concat('text()')"/>
+        <xsl:value-of select="'text()'"/>
         <xsl:value-of select="concat('[', $position, ']')"/>
       </xsl:when>
       <xsl:when test="$context/self::comment()">
-        <xsl:value-of select="concat('comment()')"/>
+        <xsl:value-of select="'comment()'"/>
         <xsl:value-of select="concat('[', $position, ']')"/>
       </xsl:when>
       <xsl:when test="$context/self::processing-instruction()">
-        <xsl:value-of select="concat('processing-instruction()')"/>
+        <xsl:value-of select="'processing-instruction()'"/>
         <xsl:value-of select="concat('[', $position, ']')"/>
       </xsl:when>
     </xsl:choose>
