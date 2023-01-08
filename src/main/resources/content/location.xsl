@@ -23,8 +23,7 @@ SOFTWARE.
 -->
 <xsl:transform version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:template name="location">
-    <xsl:param name="context" select="."/>
-    <xsl:for-each select="$context/ancestor::*">
+    <xsl:for-each select="ancestor::*">
       <xsl:variable name="position">
         <xsl:number level="single"/>
       </xsl:variable>
@@ -36,22 +35,22 @@ SOFTWARE.
     </xsl:variable>
     <xsl:value-of select="'/'"/>
     <xsl:choose>
-      <xsl:when test="$context/self::*">
-        <xsl:value-of select="concat('Q{', namespace-uri($context), '}', local-name($context))"/>
+      <xsl:when test="self::*">
+        <xsl:value-of select="concat('Q{', namespace-uri(.), '}', local-name(.))"/>
         <xsl:value-of select="concat('[', $position, ']')"/>
       </xsl:when>
-      <xsl:when test="count($context/../@*) = count($context|$context/../@*)">
-        <xsl:value-of select="concat('@Q{', namespace-uri($context), '}', local-name($context))"/>
+      <xsl:when test="count(../@*) = count(.|../@*)">
+        <xsl:value-of select="concat('@Q{', namespace-uri(.), '}', local-name(.))"/>
       </xsl:when>
-      <xsl:when test="$context/self::text()">
+      <xsl:when test="self::text()">
         <xsl:value-of select="'text()'"/>
         <xsl:value-of select="concat('[', $position, ']')"/>
       </xsl:when>
-      <xsl:when test="$context/self::comment()">
+      <xsl:when test="self::comment()">
         <xsl:value-of select="'comment()'"/>
         <xsl:value-of select="concat('[', $position, ']')"/>
       </xsl:when>
-      <xsl:when test="$context/self::processing-instruction()">
+      <xsl:when test="self::processing-instruction()">
         <xsl:value-of select="'processing-instruction()'"/>
         <xsl:value-of select="concat('[', $position, ']')"/>
       </xsl:when>
