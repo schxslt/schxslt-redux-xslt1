@@ -97,7 +97,11 @@ SOFTWARE.
       <xsl:copy-of select="xsl:key[not(preceding-sibling::sch:pattern)]"/>
 
       <alias:template match="/">
-        <svrl:schematron-output>
+        <svrl:schematron-output phase="{$phase}">
+          <xsl:copy-of select="@schemaVersion"/>
+          <xsl:for-each select="sch:ns">
+            <svrl:ns-prefix-in-attribute-values prefix="{@prefix}" uri="{@uri}"/>
+          </xsl:for-each>
           <xsl:for-each select="key('patternByPhase', $phase)">
             <alias:call-template name="{generate-id()}"/>
           </xsl:for-each>
