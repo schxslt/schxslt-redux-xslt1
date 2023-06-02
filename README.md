@@ -2,7 +2,7 @@
 
 A feature complete implementation of an XSLT 1.0 ISO Schematron processor for the XSLT 1.0 query language binding.
 
-SchXslt Redux XSLT1 is copyright (c) 2018-2022 by David Maus and released under the terms of the MIT license.
+SchXslt Redux XSLT1 is copyright (c) by David Maus and released under the terms of the MIT license.
 
 ## About
 
