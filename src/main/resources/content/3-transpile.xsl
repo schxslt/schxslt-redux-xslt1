@@ -35,6 +35,9 @@ SOFTWARE.
 
   <xsl:key name="patternByPhase" match="sch:pattern" use="../sch:phase[current()/@id = sch:active/@pattern]/@id"/>
   <xsl:key name="patternByPhase" match="sch:pattern" use="'#ALL'"/>
+  <!-- SEP 25: https://github.com/Schematron/schematron-enhancement-proposals/issues/25 -->
+  <xsl:key name="patternByPhase" match="sch:rule-set" use="../sch:phase[current()/@id = sch:active/@pattern]/@id"/>
+  <xsl:key name="patternByPhase" match="sch:rule-set" use="'#ALL'"/>
 
   <xsl:include href="shared.xsl"/>
 
@@ -116,6 +119,61 @@ SOFTWARE.
 
   </xsl:template>
 
+  <!-- SEP 25: sch:rule-set works like sch:pattern but w/o the
+       if-then-else logic of the rules. -->
+  <xsl:template match="sch:rule-set">
+
+    <alias:template name="{generate-id()}">
+      <svrl:active-rule-set>
+        <xsl:copy-of select="@id"/>
+        <xsl:if test="@documents">
+          <alias:attribute name="documents">
+            <alias:for-each select="{@documents}">
+              <alias:if test="position() > 1">
+                <alias:value-of select="' '"/>
+              </alias:if>
+              <alias:value-of select="."/>
+            </alias:for-each>
+          </alias:attribute>
+        </xsl:if>
+      </svrl:active-rule-set>
+
+      <xsl:choose>
+        <xsl:when test="@documents">
+          <alias:for-each select="{@documents}">
+            <xsl:for-each select="sch:rule">
+              <alias:apply-templates select="document(normalize-space())" mode="{generate-id()}">
+                <alias:with-param name="document-uri" select="."/>
+              </alias:apply-templates>
+            </xsl:for-each>
+          </alias:for-each>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:for-each select="sch:rule">
+            <alias:apply-templates select="." mode="{generate-id()}"/>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
+    </alias:template>
+
+    <xsl:for-each select="sch:rule">
+
+      <xsl:apply-templates select=".">
+        <xsl:with-param name="mode" select="generate-id()"/>
+      </xsl:apply-templates>
+
+      <alias:template match="*" mode="{generate-id()}" priority="-10">
+        <alias:param name="document-uri"/>
+        <alias:apply-templates mode="{generate-id()}" select="@*"/>
+        <alias:apply-templates mode="{generate-id()}" select="node()">
+          <alias:with-param name="document-uri" select="$document-uri"/>
+        </alias:apply-templates>
+      </alias:template>
+    </xsl:for-each>
+
+  </xsl:template>
+
+
   <xsl:template match="sch:pattern">
 
     <alias:template name="{generate-id()}">
@@ -147,7 +205,9 @@ SOFTWARE.
       </xsl:choose>
     </alias:template>
 
-    <xsl:apply-templates select="sch:rule"/>
+    <xsl:apply-templates select="sch:rule">
+      <xsl:with-param name="mode" select="generate-id()"/>
+    </xsl:apply-templates>
 
     <alias:template match="*" mode="{generate-id()}" priority="-10">
       <alias:param name="document-uri"/>
@@ -160,7 +220,9 @@ SOFTWARE.
   </xsl:template>
 
   <xsl:template match="sch:rule">
-    <alias:template match="{@context}" mode="{generate-id(..)}" priority="{count(following-sibling::sch:rule)}">
+    <xsl:param name="mode"/>
+
+    <alias:template match="{@context}" mode="{$mode}" priority="{count(following-sibling::sch:rule)}">
       <alias:param name="document-uri"/>
 
       <svrl:fired-rule>
